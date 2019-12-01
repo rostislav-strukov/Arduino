@@ -1,41 +1,67 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <ESP8266WebServer.h>
 #include <ArduinoJson.h>
 #include <time.h>
+#include <DNSServer.h>
+#include <WiFiManager.h>
 
-const char* ssid = "TP-LINK_D7AE80";
-const char* password = "audis430";
+const char* ssid = "Greenvice"; 
+const char* password = "password";
 int ledPin = 16;
 int analogPin = A0;
 int inPin = 4;
 int val = 0;
 
+
+ESP8266WebServer server(80);
+
 void setup () {
  
   Serial.begin(115200);
-  WiFi.begin(ssid, password);
+  WiFi.printDiag(Serial);
+  Serial.println("Opening configuration portal");
+
+  WiFiManager wifiManager;
+
+  if (!wifiManager.startConfigPortal(ssid, password))
+  {
+     Serial.println("Not connected to WiFi but continuing anyway.");
+  }
+  else
+  {
+    Serial.println("connected...)");
+  }
+
+  int connRes = WiFi.waitForConnectResult();
+
+  if (WiFi.status()!=WL_CONNECTED)
+  {
+      Serial.println("failed to connect, finishing setup anyway");
+  } 
+  else
+  {
+    Serial.print("local ip: ");
+    Serial.println(WiFi.localIP());
+  }
+  
   pinMode(inPin, INPUT);
   pinMode(ledPin, OUTPUT);
-  
-  while (WiFi.status() != WL_CONNECTED) {
- 
-    delay(1000);
-    Serial.print("Connecting..");
- 
-  }
+  WiFi.hostname("greenhost");
 }
 
 void loop() {
+
    val = analogRead(analogPin);   // read the input pin
-    digitalWrite(analogPin, val);
-    Serial.println(val);
-    
-  if (WiFi.status() == WL_CONNECTED) {
+   
+   digitalWrite(analogPin, val);
+   Serial.println(val);
+   server.handleClient();
+   
+   if (WiFi.status() == WL_CONNECTED) {
 
     WiFiClient client;
-
-    time_t now = time(nullptr);
-
+    time_t now = time(nullptr);   
     const int capacity = JSON_ARRAY_SIZE(2) * JSON_OBJECT_SIZE(4);
     StaticJsonDocument<capacity> doc;
 
@@ -49,6 +75,9 @@ void loop() {
     deviceDataList["timeStamp"] = now;
     deviceDataList["value"] = analogPin;
 
+    Serial.println(WiFi.localIP());
+    Serial.println(WiFi.hostname());
+    
     client.println("POST /api/v2/" 
     "/groups/arduinojson/data HTTP/1.1");
     client.connect("http://huspi.com:6081/Device/PostFarmData", 80);
@@ -57,30 +86,9 @@ void loop() {
     client.print("Content-Length: ");
     client.println(measureJson(doc));
     client.println("Content-Type: application/json");
-//    client.println("X-AIO-Key: " IO_KEY);
+    //client.println("X-AIO-Key: " IO_KEY);
     
-//    client.println();
+    client.println();
     serializeJson(doc, client);
-
-
-
-
-
-
-
-
-    
-//    client.addHeader("Content-Type", "application/x-www-form-urlencoded");
-//    int httpCode = client.POST(postData);
-//    String payload = client.getString();
-// 
-//    Serial.println(httpCode);
-//    Serial.println(payload);
- 
-//    client.end();
- 
   }
- 
-  delay(30000);
- 
 }
