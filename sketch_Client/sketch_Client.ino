@@ -24,6 +24,8 @@ void setup () {
 
   WiFiManager wifiManager;
 
+  if (WiFi.SSID()!="") wifiManager.setConfigPortalTimeout(60);
+  
   if (!wifiManager.startConfigPortal(ssid, password))
   {
      Serial.println("Not connected to WiFi but continuing anyway.");
@@ -52,43 +54,51 @@ void setup () {
 
 void loop() {
 
+   const String farmId = WiFi.macAddress();
+   
    val = analogRead(analogPin);   // read the input pin
    
    digitalWrite(analogPin, val);
+   Serial.print("MAC: ");
+   Serial.println(farmId);
+   Serial.print("Sensor: ");
    Serial.println(val);
    server.handleClient();
    
    if (WiFi.status() == WL_CONNECTED) {
 
-    WiFiClient client;
-    time_t now = time(nullptr);   
-    const int capacity = JSON_ARRAY_SIZE(2) * JSON_OBJECT_SIZE(4);
-    StaticJsonDocument<capacity> doc;
+      WiFiClient client;
+    
+      time_t now = time(nullptr);   
+      const int capacity = JSON_ARRAY_SIZE(2) * JSON_OBJECT_SIZE(4);
+      StaticJsonDocument<capacity> doc;
 
-    JsonObject root = doc.to<JsonObject>();
-    root["id"] = 1;
-    root["timeStamp"] = now;
+      JsonObject root = doc.to<JsonObject>();
+      root["id"] = farmId;
+      root["timeStamp"] = now;
     
-    JsonObject deviceDataList = root.createNestedObject("deviceDataList");
-    deviceDataList["id"] = "1";
-    deviceDataList["typeId"] = 3;
-    deviceDataList["timeStamp"] = now;
-    deviceDataList["value"] = analogPin;
+      JsonObject deviceDataList = root.createNestedObject("deviceDataList");
+      deviceDataList["id"] = "1";
+      deviceDataList["typeId"] = 3;
+      deviceDataList["timeStamp"] = now;
+      deviceDataList["value"] = analogPin;
 
-    Serial.println(WiFi.localIP());
-    Serial.println(WiFi.hostname());
+      Serial.println(WiFi.localIP());
+      Serial.println(WiFi.hostname());
     
-    client.println("POST /api/v2/" 
-    "/groups/arduinojson/data HTTP/1.1");
-    client.connect("http://huspi.com:6081/Device/PostFarmData", 80);
-    client.println("Host: ihuspi.com");
-    client.println("Connection: close");
-    client.print("Content-Length: ");
-    client.println(measureJson(doc));
-    client.println("Content-Type: application/json");
-    //client.println("X-AIO-Key: " IO_KEY);
+      client.println("POST /api/v2/" 
+        "/groups/arduinojson/data HTTP/1.1");
+      client.connect("http://huspi.com:6081/Device/PostFarmData", 80);
+      client.println("Host: ihuspi.com");
+      client.println("Connection: close");
+      client.print("Content-Length: ");
+      client.println(measureJson(doc));
+      client.println("Content-Type: application/json");
+      //client.println("X-AIO-Key: " IO_KEY);
     
-    client.println();
-    serializeJson(doc, client);
+      client.println();
+      serializeJson(doc, client);
+
+      delay(4000);
   }
 }
