@@ -2,12 +2,15 @@
   Modul Wi-Fi for ESP8266
   part of Arduino Mega Server project
 */
+String credentials[2] = handleWiFi()
 
-char ssid[] = "ASUSST";
-char pass[] = "54111004";
+char ssid[] = credentials[0];
+char pass[] = credentials[1];
 
+//54111004
+//
 IPAddress ip = SELF_IP;
-IPAddress gateway(192, 168, 1, 1);
+IPAddress gateway(192, 168, 1, 2);
 IPAddress subnet(255, 255, 255, 0);
 
 void wifiInit() {

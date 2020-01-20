@@ -38,8 +38,8 @@
 #include <Time.h>
 #include <TimeLib.h>
 
-char const SELF_NAME[] = "ESP8266";
-byte SELF_IP[] = {192, 168, 1, 40};
+char const SELF_NAME[] = "ESP8266_1";
+byte SELF_IP[] = {192, 168, 1, 80};
 
 // Authorization
 #define AUTH_OFF 0

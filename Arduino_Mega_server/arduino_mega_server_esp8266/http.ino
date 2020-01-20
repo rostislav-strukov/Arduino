@@ -190,4 +190,13 @@ void updateInit() {
   });
 } // updateInit()
 
+char* handleWiFi()
+{
+  String ssid = HTTP.arg("ssid");
+  String password = HTTP.arg("password");
+  char* credentials[0] = ssid;
+  char* credentials[1] = password;
+  
+  return credentials;
+}
 #endif // HTTP_FEATURE
