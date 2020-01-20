@@ -2,10 +2,10 @@
   Modul Wi-Fi for ESP8266
   part of Arduino Mega Server project
 */
-String credentials[2] = handleWiFi()
-
-char ssid[] = credentials[0];
-char pass[] = credentials[1];
+String* credentials = handleWiFi();
+//
+char* ssid = (char*)credentials[0].c_str();
+char* pass = (char*)credentials[1].c_str();
 
 //54111004
 //
