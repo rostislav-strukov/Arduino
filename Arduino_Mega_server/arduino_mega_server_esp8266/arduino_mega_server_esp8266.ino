@@ -37,6 +37,7 @@
 #include <FS.h>
 #include <Time.h>
 #include <TimeLib.h>
+#include <ArduinoJson.h>
 
 char const SELF_NAME[] = "ESP8266_1";
 byte SELF_IP[] = {192, 168, 1, 80};

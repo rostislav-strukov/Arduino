@@ -190,13 +190,36 @@ void updateInit() {
   });
 } // updateInit()
 
-String* handleWiFi()
-{
-  String ssid = HTTP.arg("ssid");
-  String password = HTTP.arg("password");
+String* handleWiFi() {
+  String userName = HTTP.arg("username");
+  String ssid = "Home30_V1";
+  //HTTP.arg("ssid");
+  String password = "Bart_Vader";
+  //HTTP.arg("password");
+
   
   String credentials[2] = { ssid, password };
+  String mac = getMacAddress();
+  
+  HTTP.send(200, "text\json", mac);
   
   return credentials;
 }
+
+//String getMacAddress() {
+//  byte mac[6];
+//  
+//  WiFi.macAddress(mac);
+//  String cMac = "";
+//  
+//  for (int i = 0; i < 6; ++i) {
+//    cMac += String(mac[i],HEX);
+//    
+//    if(i<5)
+//      cMac += "-";
+//  }
+//  cMac.toUpperCase();
+//  
+//  return cMac;
+//}
 #endif // HTTP_FEATURE

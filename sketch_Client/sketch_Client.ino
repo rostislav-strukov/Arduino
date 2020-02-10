@@ -54,7 +54,7 @@ void setup () {
 
 void loop() {
 
-   const String farmId = WiFi.macAddress();
+   const String farmId = getMacAddress();
    
    val = analogRead(analogPin);   // read the input pin
    
@@ -88,7 +88,7 @@ void loop() {
     
       client.println("POST /api/v2/" 
         "/groups/arduinojson/data HTTP/1.1");
-      client.connect("http://huspi.com:6081/Device/PostFarmData", 80);
+      client.connect("http://huspi.com:6081/Farms/PostFarmData", 80);
       client.println("Host: ihuspi.com");
       client.println("Connection: close");
       client.print("Content-Length: ");
@@ -101,4 +101,21 @@ void loop() {
 
       delay(4000);
   }
+}
+
+String getMacAddress() {
+  byte mac[6];
+  
+  WiFi.macAddress(mac);
+  String cMac = "";
+  
+  for (int i = 0; i < 6; ++i) {
+    cMac += String(mac[i],HEX);
+    
+    if(i<5)
+      cMac += "-";
+  }
+  cMac.toUpperCase();
+  
+  return cMac;
 }
