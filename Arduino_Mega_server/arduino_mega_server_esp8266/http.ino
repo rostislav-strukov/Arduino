@@ -192,11 +192,13 @@ void updateInit() {
 
 String* handleWiFi()
 {
-  String ssid = HTTP.arg("ssid");
-  String password = HTTP.arg("password");
-  
-  String credentials[2] = { ssid, password };
-  
+//  String ssid = HTTP.arg("ssid");
+//  String password = HTTP.arg("password");
+  String ssid = "SAMSUNGA7";
+  String password = "fxfa5160";
+  String credentials[] = { ssid, password };
+  Serial.print(credentials[0]);
+  Serial.print(credentials[0]);
   return credentials;
 }
 #endif // HTTP_FEATURE

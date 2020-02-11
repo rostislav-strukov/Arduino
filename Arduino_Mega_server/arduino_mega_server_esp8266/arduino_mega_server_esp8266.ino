@@ -112,6 +112,9 @@ void setup() {
   Serial.println(" started...");
   hardwareInit();
   timersInit();
+  String* creds = handleWiFi();
+  Serial.print(creds[0]);
+  Serial.print(creds[1]);
   wifiInit();
   spiffsInit();
   randomInit();
