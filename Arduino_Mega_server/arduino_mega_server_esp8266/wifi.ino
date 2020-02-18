@@ -2,11 +2,18 @@
   Modul Wi-Fi for ESP8266
   part of Arduino Mega Server project
 */
+// char** credentials = handleWiFi();
 
+String* credentials = handleWiFi();
 int ledPin = 16;
 int analogPin = A0;
 int inPin = 4;
 int val = 0;
+char* ssid = (char*)credentials[0].c_str();
+char* pass = (char*)credentials[1].c_str();
+char* ssid;
+char* pass;
+char** credentials;
 
 
 
@@ -17,6 +24,10 @@ IPAddress gateway(192, 168, 1, 2);
 IPAddress subnet(255, 255, 255, 0);
 
 void wifiInit() {
+  
+  credentials = handleWiFi();
+
+  
 
   String* credentials = handleWiFi();
   Serial.println((char*)credentials[0].c_str());
@@ -36,7 +47,13 @@ void wifiInit() {
   }
   
   initStart_("Wi-Fi");
-  Serial.print("Connecting to "); Serial.println(ssid);
+
+  ssid = (char*)credentials[0];
+  pass = (char*)credentials[1];
+
+  Serial.print("Connecting to "); 
+  Serial.println(ssid); 
+  Serial.println(pass);
   WiFi.begin(ssid, pass);
   WiFi.config(ip, gateway, subnet);
 

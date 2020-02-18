@@ -190,19 +190,21 @@ void updateInit() {
   });
 } // updateInit()
 
-String* handleWiFi() {
+char** handleWiFi()
   String userName = HTTP.arg("username");
-  String ssid = "Home30_V1";
-  //HTTP.arg("ssid");
-  String password = "Bart_Vader";
-  //HTTP.arg("password");
-
-  
-  String credentials[2] = { ssid, password };
+//  String ssid = HTTP.arg("ssid");
+//  String password = HTTP.arg("password");
+  String ssid1 = "SAMSUNGA7";
+  String password = "fxfa5160";
+  char ssid = (char)ssid1.c_str();
+  char pass = (char)password.c_str();
+  char credentials[] = { ssid, pass };
+  Serial.println(credentials[0]);
+  Serial.println(credentials[1]);
   String mac = getMacAddress();
   
   HTTP.send(200, "text\json", mac);
-  
+
   return credentials;
 }
 
