@@ -2,23 +2,17 @@
   Modul Wi-Fi for ESP8266
   part of Arduino Mega Server project
 */
-// char** credentials = handleWiFi();
 
-String* credentials = handleWiFi();
 int ledPin = 16;
 int analogPin = A0;
 int inPin = 4;
 int val = 0;
-char* ssid = (char*)credentials[0].c_str();
-char* pass = (char*)credentials[1].c_str();
+
 char* ssid;
 char* pass;
+char* userName;
 char** credentials;
 
-
-
-//54111004
-//
 IPAddress ip = SELF_IP;
 IPAddress gateway(192, 168, 1, 2);
 IPAddress subnet(255, 255, 255, 0);
@@ -27,15 +21,10 @@ void wifiInit() {
   
   credentials = handleWiFi();
 
+  char* ssid = (char*)credentials[0];
+  char* pass = (char*)credentials[1];
+  char* username = (char*)credentials[2];
   
-
-  String* credentials = handleWiFi();
-  Serial.println((char*)credentials[0].c_str());
-  Serial.println((char*)credentials[1].c_str());
-//
-  char* ssid = (char*)credentials[0].c_str();
-  char* pass = (char*)credentials[1].c_str();
-
   boolean result = WiFi.softAP("ESP8266");
   if(result == true)
   {
@@ -81,7 +70,7 @@ void wifiInit() {
       JsonObject root = doc.to<JsonObject>();
       root["id"] = farmId;
       root["timeStamp"] = now;
-      root["username"] = "Vivaldi";
+      root["username"] = username;
     
       JsonObject deviceDataList = root.createNestedObject("deviceDataList");
       deviceDataList["id"] = "1";
