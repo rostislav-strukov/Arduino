@@ -18,13 +18,16 @@ IPAddress subnet(255, 255, 255, 0);
 
 void wifiInit() {
 
-  String* credentials = handleWiFi();
-  Serial.println((char*)credentials[0].c_str());
-  Serial.println((char*)credentials[1].c_str());
-//
-  char* ssid = (char*)credentials[0].c_str();
-  char* pass = (char*)credentials[1].c_str();
+  char** credentials = handleWiFi();
 
+  char* ssid = (char*)credentials[0];
+  char* pass = (char*)credentials[1];
+  char* username = (char*)credentials[2];
+
+  Serial.println(ssid);
+  Serial.println(pass);
+  Serial.println(username);
+  
   boolean result = WiFi.softAP("ESP8266");
   if(result == true)
   {
@@ -36,7 +39,7 @@ void wifiInit() {
   }
   
   initStart_("Wi-Fi");
-  Serial.print("Connecting to "); Serial.println(ssid);
+  Serial.print("Connecting to "); 
   WiFi.begin(ssid, pass);
   WiFi.config(ip, gateway, subnet);
 
