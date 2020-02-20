@@ -190,24 +190,24 @@ void updateInit() {
   });
 } // updateInit()
 
-char** handleWiFi()
-
-  //stored wifi creds
-  String ssid = "SAMSUNGA7";
+char** handleWiFi() {
+  String wifiName = "SAMSUNGA7";
+  String password = "fxfa5160";
+  
   String password = "fxfa5160";
   
   String userName = HTTP.arg("username");
   
-  ssid = HTTP.arg("ssid");
+  wifiName = HTTP.arg("ssid");
   password = HTTP.arg("password");
     
-  char* ssid = (char*)ssid.c_str();
+  char* ssid = (char*)wifiName.c_str();
   char* pass = (char*)password.c_str();
-  char* username = (char*)username.c_str();
+  char* username = (char*)userName.c_str();
   
-  char credentials[] = { ssid, pass, username };
+  char* credentials[] = { ssid, pass, username };
   
-  Serial.println(credentials[0]);
+  HTTP.send(200, "text\json", "credential is handled");
   Serial.println(credentials[1]);
   
   HTTP.send(200, "text\json", "credential is handled");
