@@ -194,8 +194,6 @@ char** handleWiFi() {
   String wifiName = "SAMSUNGA7";
   String password = "fxfa5160";
   
-  String password = "fxfa5160";
-  
   String userName = HTTP.arg("username");
   
   wifiName = HTTP.arg("ssid");
@@ -206,9 +204,6 @@ char** handleWiFi() {
   char* username = (char*)userName.c_str();
   
   char* credentials[] = { ssid, pass, username };
-  
-  HTTP.send(200, "text\json", "credential is handled");
-  Serial.println(credentials[1]);
   
   HTTP.send(200, "text\json", "credential is handled");
 
